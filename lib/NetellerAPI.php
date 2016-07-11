@@ -186,7 +186,7 @@ class NetellerAPI{
 
         //return the response headers
         curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        // curl_setopt($ch, CURLOPT_VERBOSE, true);
 
         //method && request params:
         switch (strtolower($method))
