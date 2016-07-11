@@ -1,11 +1,17 @@
 {
-  "name": "geosub/nettelerapi",
+  "name": "petski/netellerapi",
   "description": "Neteller API",
   "type": "library",
-  "authors": [{
-    "name": "Omnipay",
-    "email": "geosub@gmail.com"
-  }],
+  "authors": [
+    {
+      "name": "Omnipay",
+      "email": "geosub@gmail.com"
+    },
+    {
+      "name": "Patrick Kuijvenhoven",
+      "email": "patrick.kuijvenhoven@gmail.com"
+    }
+  ],
   "keywords": [ "omnipay", "neteller", "api", "php", "payment" ],
   "require": {
     "php": ">=5.4.0"
