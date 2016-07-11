@@ -1,5 +1,7 @@
 <?php
 
+namespace NetellerAPI;
+
 class NetellerAPI{
     var $baseUrl;
     var $clientId;
