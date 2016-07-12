@@ -69,6 +69,7 @@ Methods
 - **getToken\_ClientCredentials()** - Returns a new access token - "client\_credentials" grant type.
 - **getToken\_AuthCode(string $authCode, string $redirectUri)** - Returns a new access token - "auth\_code" grant type.
 - **getToken\_RefreshToken(string $refreshToken)** - Returns a new access token using a refresh token.
+- **getExecutionErrors()** - Returns an array with the error(s) returned by the NETELLER REST API.
 
 Example
 -------
