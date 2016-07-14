@@ -57,7 +57,7 @@ Example:
 
 Alternatively, you may pass these required parameters to the constructor of each method instead:
 
-    $deposit = new RequestPayment(array(
+    $deposit = new NetellerAPI\RequestPayment(array(
      'NETELLER_BASE_URL' => 'https://test.api.neteller.com/',
      'NETELLER_CLIENT_ID' => 'AAABTAiQ9pKruN2Z',
      'NETELLER_CLIENT_SECRET' => '0.iSLQ7zzMinac6SbI62onxTdqEYFES1LXoI4paRFFz74.4yFz4Pr3BMIccXgQOb3Ea_FNG2Y'
@@ -83,7 +83,7 @@ Example
 -------
 
  
-    $api = new NetellerAPI();
+    $api = new NetellerAPI\NetellerAPI();
     $ip = $api->getIP();
     var_dump($ip);
 
@@ -91,7 +91,7 @@ Example
 It can also be used in the context of a child class:
 
  
-    $deposit = new RequestPayment();
+    $deposit = new NetellerAPI\RequestPayment();
     $deposit->setPaymentMethodValue('netellertest_USD@neteller.com')
             ->setVerificationCode(270955)
             ->setTransactionMerchantRefId('adfiu1i23478172349a')
@@ -125,7 +125,7 @@ Example
 -------
 
  
-    $deposit = new RequestPayment();
+    $deposit = new NetellerAPI\RequestPayment();
     $deposit->setPaymentMethodValue('netellertest_USD@neteller.com')
             ->setVerificationCode(270955)
             ->setTransactionMerchantRefId('adfiu1i23478172349a')
@@ -156,7 +156,7 @@ Example
 -------
 
  
-    $withdrawal = new CreatePayment();
+    $withdrawal = new NetellerAPI\CreatePayment();
     $withdrawal->setPayeeProfileEmail('netellertest_USD@neteller.com')
                ->setTransactionAmount(1234)
                ->setTransactionCurrency('USD')
@@ -184,7 +184,7 @@ Example
 -------
 
  
-    $lookup = new LookupPayment();
+    $lookup = new NetellerAPI\LookupPayment();
     $lookup->setTransactionId('850430740226289')
            ->setExpand('customer');
     $result = $lookup->doRequest();
@@ -231,7 +231,7 @@ Example
 -------
 
  
-    $order = new CreateOrder();
+    $order = new NetellerAPI\CreateOrder();
     $order->setOrderMerchantRefId('adfiu1i23478172349o1')
           ->setOrderTotalAmount(2099)
           ->setOrderCurrency('USD')
@@ -307,7 +307,7 @@ Example
 -------
 
  
-    $lookup = new LookupOrder();
+    $lookup = new NetellerAPI\LookupOrder();
     $lookup->setOrderId("ORD_1f21ca9d-e647-46bc-9dde-91c70632e587");
     $result = $lookup->doRequest();
     var_dump($result);
@@ -330,7 +330,7 @@ Example
 -------
 
  
-    $lookup = new LookupOrderInvoice();
+    $lookup = new NetellerAPI\LookupOrderInvoice();
     $lookup->setOrderId("ORD_5c0023d3-c928-4771-9016-1fc169283b0f")
            ->setExpand("customer,order");
     $result = $lookup->doRequest();
@@ -372,7 +372,7 @@ Example
 -------
 
  
-    $signup = new CreateCustomer();
+    $signup = new NetellerAPI\CreateCustomer();
     $signup->setEmail("john.smith@example.com")
            ->setFirstName("John")
            ->setLastName("Smith")
@@ -419,7 +419,7 @@ Example
 -------
 
  
-    $lookup = new LookupCustomer();
+    $lookup = new NetellerAPI\LookupCustomer();
     $lookup->setCustomerId("453523712313")
            ->setRefreshToken("0.AgAAAU0yy4sHAAAAB1jwsOC9J7TBAYynTble-g2fdC-d.7xIAyXxQWsDaiLzjY4qimsqfyYU");
     $result = $lookup->doRequest();
@@ -448,7 +448,7 @@ Example
 -------
 
  
-    $plan = new CreatePlan();
+    $plan = new NetellerAPI\CreatePlan();
     $plan->setPlanId("MONTHLYGREENPLAN")
          ->setPlanName("Sample Premier Monthly Membership")
          ->setInterval(3)
@@ -476,7 +476,7 @@ Example
 -------
 
  
-    $lookup = new LookupPlan();
+    $lookup = new NetellerAPI\LookupPlan();
     $lookup->setPlanId("MONTHLYGREENPLAN");
     $result = $lookup->doRequest();
     var_dump($result);
@@ -498,7 +498,7 @@ Example
 -------
 
  
-    $plan = new CancelPlan();
+    $plan = new NetellerAPI\CancelPlan();
     $plan->setPlanId("MONTHLYGREENPLAN");
     $result = $plan->doRequest();
     var_dump($result);
@@ -520,7 +520,7 @@ Example
 -------
 
  
-    $plan = new DeletePlan();
+    $plan = new NetellerAPI\DeletePlan();
     $plan->setPlanId("MONTHLYGREENPLAN");
     $result = $plan->doRequest();
     var_dump($result);
@@ -543,7 +543,7 @@ Example
 -------
 
  
-    $plans = new ListPlans();
+    $plans = new NetellerAPI\ListPlans();
     $plans->setLimit(10)
           ->setOffset(0);
     $result = $plans->doRequest();
@@ -574,7 +574,7 @@ Examples
 ### Using Authorization code
 
  
-    $subscription = new CreateSubscription();
+    $subscription = new NetellerAPI\CreateSubscription();
     $subscription->setPlanId("MONTHLYGREENPLAN")
                  ->setAccountProfileEmail("netellertest_USD@neteller.com")
                  ->setStartDate("2015-05-09T00:00:00Z")
@@ -588,7 +588,7 @@ Examples
 ### Using Refresh token
 
  
-    $subscription = new CreateSubscription();
+    $subscription = new NetellerAPI\CreateSubscription();
     $subscription->setPlanId("MONTHLYGREENPLAN")
                  ->setAccountProfileEmail("netellertest_USD@neteller.com")
                  ->setStartDate("2015-05-09T00:00:00Z")
@@ -616,7 +616,7 @@ Example
 -------
 
  
-    $lookup = new LookupSubscription();
+    $lookup = new NetellerAPI\LookupSubscription();
     $lookup->setSubscriptionId("180")
            ->setExpand("plan,customer");
     $result = $lookup->doRequest();
@@ -639,7 +639,7 @@ Example
 -------
 
  
-    $subscription = new CancelSubscription();
+    $subscription = new NetellerAPI\CancelSubscription();
     $subscription->setSubscriptionId("181");
     $result = $subscription->doRequest();
     var_dump($result);
@@ -662,7 +662,7 @@ Example
 -------
 
  
-    $subscriptions = new ListSubscriptions();
+    $subscriptions = new NetellerAPI\ListSubscriptions();
     $subscriptions->setLimit(10)
                   ->setOffset(0);
     $result = $subscriptions->doRequest();
@@ -687,7 +687,7 @@ Example
 -------
 
  
-    $lookup = new LookupSubscriptionInvoice();
+    $lookup = new NetellerAPI\LookupSubscriptionInvoice();
     $lookup->setSubscriptionId(166)
            ->setInvoiceNumber(42)
            ->setExpand("customer, subscription");
@@ -713,7 +713,7 @@ Example
 -------
 
  
-    $lookup = new LookupAllSubscriptionInvoices();
+    $lookup = new NetellerAPI\LookupAllSubscriptionInvoices();
     $lookup->setSubscriptionId(166)
            ->setLimit(10)
            ->setOffset(0);
@@ -735,11 +735,11 @@ Example
 -------
 
  
-    $webhook = new WebhookHandler();
+    $webhook = new NetellerAPI\WebhookHandler();
     $webhook->handleRequest();
     
     function payment_succeeded($data){
-        $api = new NetellerAPI();
+        $api = new NetellerAPI\NetellerAPI();
         $result = $api->getUrl($data->links[0]->url);
         //do something with the response here
     }
