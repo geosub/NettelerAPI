@@ -11,7 +11,10 @@ class NetellerAPI{
     public function __construct(array $opts = array()){
         foreach(array('NETELLER_BASE_URL','NETELLER_CLIENT_ID','NETELLER_CLIENT_SECRET') as $constant) { 
             if(! array_key_exists($constant, $opts) || empty($opts[$constant])) {
-                    $opts[$constant] = constant($constant);
+                if(! defined($constant)) {
+                    throw new Exception("Missing required $constant");
+                }
+                $opts[$constant] = constant($constant);
             }
         }
         $this->setApiCredentials($opts['NETELLER_BASE_URL'], $opts['NETELLER_CLIENT_ID'], $opts['NETELLER_CLIENT_SECRET']);
