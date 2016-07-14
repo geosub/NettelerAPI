@@ -809,7 +809,7 @@ class CreateOrder extends NetellerAPI{
             $requestParams['billingDetails'][0]['lang'] = $this->billingDetailsLang;
         }
         
-        $response = $this->post("/v1/orders", $queryParams, $headers, $requestParams);
+        $response = $this->post("v1/orders", $queryParams, $headers, $requestParams);
         $responseInfo = $response['info'];
         $responseBody = json_decode($response['body']);
 
