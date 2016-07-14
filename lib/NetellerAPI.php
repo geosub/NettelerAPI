@@ -809,6 +809,13 @@ class CreateOrder extends NetellerAPI{
             $requestParams['billingDetails'][0]['lang'] = $this->billingDetailsLang;
         }
         
+        # Don't send billingDetails if we don't have any
+        if(is_array($requestParams['billingDetails']) && count($requestParams['billingDetails']) == 1 &&
+            array_key_exists(0, $requestParams['billingDetails']) && is_array($requestParams['billingDetails'][0]) &&
+            count($requestParams['billingDetails'][0]) == 0) {
+            unset($requestParams['billingDetails']);
+        }
+        
         $response = $this->post("v1/orders", $queryParams, $headers, $requestParams);
         $responseInfo = $response['info'];
         $responseBody = json_decode($response['body']);
