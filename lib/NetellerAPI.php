@@ -1,12 +1,23 @@
 <?php
 
+namespace NetellerAPI;
+
 class NetellerAPI{
     var $baseUrl;
     var $clientId;
     var $clientSecret;
+    var $executionErrors = array();
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        foreach(array('NETELLER_BASE_URL','NETELLER_CLIENT_ID','NETELLER_CLIENT_SECRET') as $constant) { 
+            if(! array_key_exists($constant, $opts) || empty($opts[$constant])) {
+                if(! defined($constant)) {
+                    throw new Exception("Missing required $constant");
+                }
+                $opts[$constant] = constant($constant);
+            }
+        }
+        $this->setApiCredentials($opts['NETELLER_BASE_URL'], $opts['NETELLER_CLIENT_ID'], $opts['NETELLER_CLIENT_SECRET']);
     }
     
     public function getIP(){
@@ -37,7 +48,7 @@ class NetellerAPI{
             return false;
         }
         
-        $path = str_replace(NETELLER_BASE_URL, "/", $url);
+        $path = str_replace($this->baseUrl, "/", $url);
         
         $queryParams = array();
         
@@ -53,6 +64,7 @@ class NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -81,13 +93,14 @@ class NetellerAPI{
         $headers = array
             (
                 "Content-type" => "application/json",
-                "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+                "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
             );
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
         $responseInfo = $response['info'];
         $responseBody = json_decode($response['body']);
         
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody->accessToken;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -114,13 +127,14 @@ class NetellerAPI{
         $headers = array
             (
                 "Content-type" => "application/json",
-                "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+                "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
             );
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
         $responseInfo = $response['info'];
         $responseBody = json_decode($response['body']);
         
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody->accessToken;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -147,7 +161,7 @@ class NetellerAPI{
         $headers = array
         (
             "Content-type" => "application/json",
-            "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+            "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
         );
         
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
@@ -155,6 +169,7 @@ class NetellerAPI{
         $responseBody = json_decode($response['body']);
         
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody->accessToken;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -184,7 +199,7 @@ class NetellerAPI{
 
         //return the response headers
         curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        // curl_setopt($ch, CURLOPT_VERBOSE, true);
 
         //method && request params:
         switch (strtolower($method))
@@ -259,6 +274,10 @@ class NetellerAPI{
 
         return $response;
     }
+
+    public function getExecutionErrors(){
+        return $this->executionErrors;
+    }
 }
 
 class RequestPayment extends NetellerAPI{
@@ -271,8 +290,8 @@ class RequestPayment extends NetellerAPI{
     var $expandObjects;
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setPaymentMethodValue($paymentMethodValue){
@@ -346,6 +365,7 @@ class RequestPayment extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -377,8 +397,8 @@ class CreatePayment extends NetellerAPI{
 
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setPayeeProfileEmail($payeeProfileEmail){
@@ -450,6 +470,7 @@ class CreatePayment extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -478,8 +499,8 @@ class LookupPayment extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setTransactionId($transactionId){
@@ -529,6 +550,7 @@ class LookupPayment extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -551,6 +573,7 @@ class LookupPayment extends NetellerAPI{
 }
 
 class CreateOrder extends NetellerAPI{
+    var $orderId;
     var $orderMerchantRefId;
     var $orderTotalAmount;
     var $orderCurrency;
@@ -578,8 +601,8 @@ class CreateOrder extends NetellerAPI{
     var $redirectUrl;
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setOrderMerchantRefId($orderMerchantRefId){
@@ -795,12 +818,20 @@ class CreateOrder extends NetellerAPI{
             $requestParams['billingDetails'][0]['lang'] = $this->billingDetailsLang;
         }
         
-        $response = $this->post("/v1/orders", $queryParams, $headers, $requestParams);
+        # Don't send billingDetails if we don't have any
+        if(is_array($requestParams['billingDetails']) && count($requestParams['billingDetails']) == 1 &&
+            array_key_exists(0, $requestParams['billingDetails']) && is_array($requestParams['billingDetails'][0]) &&
+            count($requestParams['billingDetails'][0]) == 0) {
+            unset($requestParams['billingDetails']);
+        }
+        
+        $response = $this->post("v1/orders", $queryParams, $headers, $requestParams);
         $responseInfo = $response['info'];
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
-
+            $this->executionErrors = array();
+            $this->orderId = $responseBody->orderId;
             foreach($responseBody->links as $struct) {
                 if ($struct->rel == "hosted_payment") {
                     $this->redirectUrl = $struct->url;
@@ -810,6 +841,7 @@ class CreateOrder extends NetellerAPI{
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
+            $this->orderId = null;
             $this->executionErrors = array(
                 'http_status_code' => $responseInfo['http_code'],
                 'api_error_code' => $responseBody->error->code,
@@ -821,6 +853,10 @@ class CreateOrder extends NetellerAPI{
         else{
             return false;
         }
+    }
+
+    public function getOrderId() {
+        return $this->orderId;
     }
     
     public function getRedirectUrl(){
@@ -837,8 +873,8 @@ class LookupOrder extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setOrderId($orderId){
@@ -867,6 +903,7 @@ class LookupOrder extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -894,8 +931,8 @@ class LookupOrderInvoice extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setOrderId($orderId){
@@ -934,6 +971,7 @@ class LookupOrderInvoice extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -977,8 +1015,8 @@ class CreateCustomer extends NetellerAPI{
     var $redirectUrl;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setEmail($email){
@@ -1141,6 +1179,7 @@ class CreateCustomer extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             foreach($responseBody->links as $struct) {
                 if ($struct->rel == "member_signup_redirect") {
                     $this->redirectUrl = $struct->url;
@@ -1181,8 +1220,8 @@ class LookupCustomer extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setAccountId($accountId){
@@ -1258,6 +1297,7 @@ class LookupCustomer extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1290,8 +1330,8 @@ class CreatePlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1360,6 +1400,7 @@ class CreatePlan extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1386,8 +1427,8 @@ class LookupPlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1416,6 +1457,7 @@ class LookupPlan extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1442,8 +1484,8 @@ class CancelPlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1472,6 +1514,7 @@ class CancelPlan extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1498,8 +1541,8 @@ class DeletePlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1528,6 +1571,7 @@ class DeletePlan extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1554,8 +1598,8 @@ class ListPlans extends NetellerAPI{
     var $limit;
     var $offset;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setLimit($limit){
@@ -1593,6 +1637,7 @@ class ListPlans extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1626,8 +1671,8 @@ class CreateSubscription extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1705,6 +1750,7 @@ class CreateSubscription extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1732,8 +1778,8 @@ class LookupSubscription extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -1773,6 +1819,7 @@ class LookupSubscription extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1799,8 +1846,8 @@ class CancelSubscription extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -1829,6 +1876,7 @@ class CancelSubscription extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1856,8 +1904,8 @@ class ListSubscriptions extends NetellerAPI{
     
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setLimit($limit){
@@ -1895,6 +1943,7 @@ class ListSubscriptions extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1923,8 +1972,8 @@ class LookupSubscriptionInvoice extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -1968,6 +2017,7 @@ class LookupSubscriptionInvoice extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
@@ -1997,8 +2047,8 @@ class LookupAllSubscriptionInvoices extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -2041,6 +2091,7 @@ class LookupAllSubscriptionInvoices extends NetellerAPI{
         $responseBody = json_decode($response['body']);
 
         if($responseInfo['http_code'] == 200){
+            $this->executionErrors = array();
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
