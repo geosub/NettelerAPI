@@ -55,6 +55,14 @@ Example:
     define('NETELLER_CLIENT_ID', 'AAABTAiQ9pKruN2Z');
     define('NETELLER_CLIENT_SECRET', '0.iSLQ7zzMinac6SbI62onxTdqEYFES1LXoI4paRFFz74.4yFz4Pr3BMIccXgQOb3Ea_FNG2Y');
 
+Alternatively, you may pass these required parameters to the constructor of each method instead:
+
+    $deposit = new RequestPayment(array(
+     'NETELLER_BASE_URL' => 'https://test.api.neteller.com/',
+     'NETELLER_CLIENT_ID' => 'AAABTAiQ9pKruN2Z',
+     'NETELLER_CLIENT_SECRET' => '0.iSLQ7zzMinac6SbI62onxTdqEYFES1LXoI4paRFFz74.4yFz4Pr3BMIccXgQOb3Ea_FNG2Y'
+     ));
+    .. etc etc
 
 NetellerAPI Class <a name="NetellerAPI"></a>
 ============================================
