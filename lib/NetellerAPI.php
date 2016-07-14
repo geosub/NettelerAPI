@@ -8,8 +8,13 @@ class NetellerAPI{
     var $clientSecret;
     var $executionErrors = array();
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        foreach(array('NETELLER_BASE_URL','NETELLER_CLIENT_ID','NETELLER_CLIENT_SECRET') as $constant) { 
+            if(! array_key_exists($constant, $opts) || empty($opts[$constant])) {
+                    $opts[$constant] = constant($constant);
+            }
+        }
+        $this->setApiCredentials($opts['NETELLER_BASE_URL'], $opts['NETELLER_CLIENT_ID'], $opts['NETELLER_CLIENT_SECRET']);
     }
     
     public function getIP(){
@@ -282,8 +287,8 @@ class RequestPayment extends NetellerAPI{
     var $expandObjects;
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setPaymentMethodValue($paymentMethodValue){
@@ -389,8 +394,8 @@ class CreatePayment extends NetellerAPI{
 
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setPayeeProfileEmail($payeeProfileEmail){
@@ -491,8 +496,8 @@ class LookupPayment extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setTransactionId($transactionId){
@@ -593,8 +598,8 @@ class CreateOrder extends NetellerAPI{
     var $redirectUrl;
     var $executionErrors = array();
 
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
 
     public function setOrderMerchantRefId($orderMerchantRefId){
@@ -865,8 +870,8 @@ class LookupOrder extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setOrderId($orderId){
@@ -923,8 +928,8 @@ class LookupOrderInvoice extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setOrderId($orderId){
@@ -1007,8 +1012,8 @@ class CreateCustomer extends NetellerAPI{
     var $redirectUrl;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setEmail($email){
@@ -1212,8 +1217,8 @@ class LookupCustomer extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setAccountId($accountId){
@@ -1322,8 +1327,8 @@ class CreatePlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1419,8 +1424,8 @@ class LookupPlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1476,8 +1481,8 @@ class CancelPlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1533,8 +1538,8 @@ class DeletePlan extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1590,8 +1595,8 @@ class ListPlans extends NetellerAPI{
     var $limit;
     var $offset;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setLimit($limit){
@@ -1663,8 +1668,8 @@ class CreateSubscription extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setPlanId($planId){
@@ -1770,8 +1775,8 @@ class LookupSubscription extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -1838,8 +1843,8 @@ class CancelSubscription extends NetellerAPI{
 
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -1896,8 +1901,8 @@ class ListSubscriptions extends NetellerAPI{
     
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setLimit($limit){
@@ -1964,8 +1969,8 @@ class LookupSubscriptionInvoice extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
@@ -2039,8 +2044,8 @@ class LookupAllSubscriptionInvoices extends NetellerAPI{
     var $expandObjects;
     var $executionErrors;
     
-    public function __construct(){
-        $this->setApiCredentials(NETELLER_BASE_URL,NETELLER_CLIENT_ID,NETELLER_CLIENT_SECRET);
+    public function __construct(array $opts = array()){
+        return parent::__construct($opts);
     }
     
     public function setSubscriptionId($subscriptionId){
