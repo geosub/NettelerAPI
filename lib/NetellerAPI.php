@@ -40,7 +40,7 @@ class NetellerAPI{
             return false;
         }
         
-        $path = str_replace(NETELLER_BASE_URL, "/", $url);
+        $path = str_replace($this->baseUrl, "/", $url);
         
         $queryParams = array();
         
@@ -85,7 +85,7 @@ class NetellerAPI{
         $headers = array
             (
                 "Content-type" => "application/json",
-                "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+                "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
             );
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
         $responseInfo = $response['info'];
@@ -119,7 +119,7 @@ class NetellerAPI{
         $headers = array
             (
                 "Content-type" => "application/json",
-                "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+                "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
             );
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
         $responseInfo = $response['info'];
@@ -153,7 +153,7 @@ class NetellerAPI{
         $headers = array
         (
             "Content-type" => "application/json",
-            "Authorization" => "Basic ". base64_encode( NETELLER_CLIENT_ID . ":" . NETELLER_CLIENT_SECRET)
+            "Authorization" => "Basic ". base64_encode( $this->clientId . ":" . $this->clientSecret )
         );
         
         $response = $this->post("v1/oauth2/token", $queryParams, $headers, array());
