@@ -565,6 +565,7 @@ class LookupPayment extends NetellerAPI{
 }
 
 class CreateOrder extends NetellerAPI{
+    var $orderId;
     var $orderMerchantRefId;
     var $orderTotalAmount;
     var $orderCurrency;
@@ -822,6 +823,7 @@ class CreateOrder extends NetellerAPI{
 
         if($responseInfo['http_code'] == 200){
             $this->executionErrors = array();
+            $this->orderId = $responseBody->orderId;
             foreach($responseBody->links as $struct) {
                 if ($struct->rel == "hosted_payment") {
                     $this->redirectUrl = $struct->url;
@@ -831,6 +833,7 @@ class CreateOrder extends NetellerAPI{
             return $responseBody;
         }
         elseif($responseInfo['http_code'] >= 400){
+            $this->orderId = null;
             $this->executionErrors = array(
                 'http_status_code' => $responseInfo['http_code'],
                 'api_error_code' => $responseBody->error->code,
@@ -842,6 +845,10 @@ class CreateOrder extends NetellerAPI{
         else{
             return false;
         }
+    }
+
+    public function getOrderId() {
+        return $this->orderId;
     }
     
     public function getRedirectUrl(){

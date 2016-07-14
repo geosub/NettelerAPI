@@ -215,6 +215,7 @@ Methods
 - **setBillingDetailsLang(string $billingDetailsLang)** - Sets the preferred language of communication of the customer.
 - **setAttributes(array $attribute)** - Sets additional attributes for this order.
 - **doRequest()** - Executes the API request. Returns the JSON-decoded object of the NETELLER REST API response, or "(bool)false" if an error has occurred.
+- **getOrderId()** - Returns the NETELLER order id or null (in case doRequest() not called yet, or error occurred)
 - **getRedirectUrl()** - Returns the URL where the client needs to be redirected to complete the payment.
 - **getExecutionErrors()** - Returns an array with the error(s) returned by the NETELLER REST API.
 
