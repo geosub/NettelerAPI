@@ -1,4 +1,6 @@
-NETELLER REST API PHP Library
+**Abandoned, use https://github.com/worldstream-labs/omnipay-paysafe-payment-hub instead**
+
+~~NETELLER REST API PHP Library~~
 =============================
 
 Introduction
